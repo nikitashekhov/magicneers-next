@@ -11,10 +11,19 @@ interface File {
   link: string;
 }
 
+interface User {
+  id: string;
+  name: string | null;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+}
+
 interface Certificate {
   id: string;
   title: string;
   installationDate: Date;
+  user: User;
   smilePhoto: File;
   digitalCopy: File;
   doctorFirstName: string;
@@ -27,7 +36,7 @@ interface Certificate {
   materialColor: string;
   fixationType: string;
   fixationColor: string;
-  dentalFormula: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  dentalFormula: any;
   createdAt: Date;
   updatedAt: Date;
 }

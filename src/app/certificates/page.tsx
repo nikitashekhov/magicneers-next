@@ -18,6 +18,7 @@ export default async function CertificatesPage() {
   try {
     const certificates = await prisma.certificate.findMany({
       include: {
+        user: true,
         smilePhoto: true,
         digitalCopy: true
       },

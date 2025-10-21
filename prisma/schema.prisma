@@ -49,6 +49,7 @@ model User {
   role          String    @default("user") // Роль пользователя: admin или user
   accounts      Account[]
   sessions      Session[]
+  certificates  Certificate[]
 }
 
 model VerificationToken {
@@ -74,6 +75,8 @@ model Certificate {
   id                    String   @id @default(auto()) @map("_id") @db.ObjectId
   title                 String   // Название (публично)
   installationDate      DateTime      // Дата установки в UNIX формате (приватно)
+  userId                String   @db.ObjectId
+  user                  User     @relation(fields: [userId], references: [id])
   smilePhotoId          String   @db.ObjectId
   smilePhoto            File     @relation("CertificateSmilePhoto", fields: [smilePhotoId], references: [id])
   digitalCopyId         String   @db.ObjectId

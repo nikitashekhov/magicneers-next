@@ -11,10 +11,19 @@ interface File {
   link: string;
 }
 
+interface User {
+  id: string;
+  name: string | null;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+}
+
 interface Certificate {
   id: string;
   title: string;
   installationDate: Date;
+  user: User;
   smilePhoto: File;
   digitalCopy: File;
   doctorFirstName: string;
@@ -27,7 +36,7 @@ interface Certificate {
   materialColor: string;
   fixationType: string;
   fixationColor: string;
-  dentalFormula: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  dentalFormula: any;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -97,6 +106,20 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
             <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
             </svg>
+            <span>Пациент: {certificate.user.firstName} {certificate.user.lastName}</span>
+          </div>
+          
+          <div className="flex items-center">
+            <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" clipRule="evenodd" />
+            </svg>
+            <span>{certificate.user.email}</span>
+          </div>
+          
+          <div className="flex items-center">
+            <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+            </svg>
             <span>Доктор: {certificate.doctorFirstName} {certificate.doctorLastName}</span>
           </div>
           
@@ -154,22 +177,30 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
         )}
 
         {/* Кнопки действий */}
-        <div className="mt-4 flex space-x-2">
+        <div className="mt-4 space-y-2">
+          <div className="flex space-x-2">
+            <a
+              href={certificate.smilePhoto.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 bg-blue-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-blue-600 transition-colors"
+            >
+              Просмотр фото
+            </a>
+            <a
+              href={certificate.digitalCopy.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 bg-green-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-green-600 transition-colors"
+            >
+              Скачать копию
+            </a>
+          </div>
           <a
-            href={certificate.smilePhoto.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 bg-blue-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-blue-600 transition-colors"
+            href={`/certificates/edit/${certificate.id}`}
+            className="w-full bg-orange-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-orange-600 transition-colors block"
           >
-            Просмотр фото
-          </a>
-          <a
-            href={certificate.digitalCopy.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 bg-green-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-green-600 transition-colors"
-          >
-            Скачать копию
+            Редактировать
           </a>
         </div>
       </div>

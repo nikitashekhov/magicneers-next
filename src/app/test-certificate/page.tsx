@@ -6,6 +6,9 @@ export default function TestCertificatePage() {
   const [formData, setFormData] = useState({
     title: 'Magicneers #1',
     installationDate: '2024-01-15',
+    userFirstName: 'John',
+    userLastName: 'Doe',
+    userEmail: 'john.doe@example.com',
     doctorFirstName: 'Artavazd',
     doctorLastName: 'Manukyan',
     clinicName: 'AestheticA',
@@ -94,6 +97,43 @@ export default function TestCertificatePage() {
             className="w-full p-2 border rounded"
             required
           />
+        </div>
+
+        {/* User Information */}
+        <div className="p-4 rounded-lg">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">User Information</h3>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div>
+              <label className="block text-sm font-medium mb-1">User First Name</label>
+              <input
+                type="text"
+                value={formData.userFirstName}
+                onChange={(e) => setFormData({...formData, userFirstName: e.target.value})}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">User Last Name</label>
+              <input
+                type="text"
+                value={formData.userLastName}
+                onChange={(e) => setFormData({...formData, userLastName: e.target.value})}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">User Email</label>
+              <input
+                type="email"
+                value={formData.userEmail}
+                onChange={(e) => setFormData({...formData, userEmail: e.target.value})}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">

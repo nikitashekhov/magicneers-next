@@ -9,7 +9,7 @@ import path from 'node:path';
 export async function POST(request: NextRequest) {
   const session = await auth();
 
-  if (!session || !session.user || !session.user.id || (session.user as any).role !== 'admin') {
+  if (!session || !session.user || !session.user.id || (session.user as { role?: string }).role !== 'admin') {
     return NextResponse.json({ success: false, error: 'Not authenticated' }, { status: 401 });
   }
 
@@ -34,12 +34,17 @@ export async function POST(request: NextRequest) {
     const fixationType = formData.get('fixationType') as string;
     const fixationColor = formData.get('fixationColor') as string;
     const dentalFormula = formData.get('dentalFormula') as string;
+    
+    // Получаем данные пользователя
+    const userFirstName = formData.get('userFirstName') as string;
+    const userLastName = formData.get('userLastName') as string;
+    const userEmail = formData.get('userEmail') as string;
 
     // Валидация обязательных полей
-    if (!title || !installationDate || !smilePhotoFile || !digitalCopyFile) {
+    if (!title || !installationDate || !smilePhotoFile || !digitalCopyFile || !userFirstName || !userLastName || !userEmail) {
       return NextResponse.json({ 
         success: false, 
-        error: 'Missing required fields: title, installationDate, smilePhoto, digitalCopy' 
+        error: 'Missing required fields: title, installationDate, smilePhoto, digitalCopy, userFirstName, userLastName, userEmail' 
       }, { status: 400 });
     }
 
@@ -92,11 +97,49 @@ export async function POST(request: NextRequest) {
     let parsedDentalFormula;
     try {
       parsedDentalFormula = dentalFormula ? JSON.parse(dentalFormula) : {};
-    } catch (error) {
+    } catch {
       return NextResponse.json({ 
         success: false, 
         error: 'Invalid dental formula JSON format' 
       }, { status: 400 });
+    }
+
+    // Находим или создаем пользователя
+    let user;
+    try {
+      // Сначала пытаемся найти пользователя по email
+      user = await prisma.user.findUnique({
+        where: { email: userEmail }
+      });
+
+      if (!user) {
+        // Если пользователь не найден, создаем нового
+        user = await prisma.user.create({
+          data: {
+            email: userEmail,
+            firstName: userFirstName,
+            lastName: userLastName,
+            name: `${userFirstName} ${userLastName}`,
+            role: 'user'
+          }
+        });
+      } else {
+        // Если пользователь найден, обновляем его данные
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            firstName: userFirstName,
+            lastName: userLastName,
+            name: `${userFirstName} ${userLastName}`
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error handling user:', error);
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Failed to create or update user' 
+      }, { status: 500 });
     }
 
     // Создаем сертификат
@@ -104,6 +147,7 @@ export async function POST(request: NextRequest) {
       data: {
         title,
         installationDate: new Date(installationDate),
+        userId: user.id,
         smilePhotoId: smilePhotoFileRecord.id,
         digitalCopyId: digitalCopyFileRecord.id,
         doctorFirstName,
@@ -119,6 +163,7 @@ export async function POST(request: NextRequest) {
         dentalFormula: parsedDentalFormula
       },
       include: {
+        user: true,
         smilePhoto: true,
         digitalCopy: true
       }
