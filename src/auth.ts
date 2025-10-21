@@ -70,7 +70,7 @@ const otpProvider = CredentialsProvider({
     email: { label: "Email", type: "email" },
     otp: { label: "OTP", type: "text" },
   },
-  async authorize(credentials): Promise<{ id: string; email: string; name: string | null } | null> {
+  async authorize(credentials): Promise<{ id: string; email: string; name: string | null; role: string } | null> {
     if (!credentials?.email || !credentials?.otp) {
       return null
     }
@@ -102,6 +102,7 @@ const otpProvider = CredentialsProvider({
       id: user.id,
       email: user.email,
       name: user.name,
+      role: user.role,
     }
   },
 })
@@ -129,6 +130,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id
         token.email = user.email || null
         token.name = user.name || null
+        token.role = (user as any).role
       }
       return token
     },
@@ -137,6 +139,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = token.id as string
         session.user.email = token.email as string
         session.user.name = token.name as string
+        ;(session.user as any).role = token.role as string
       }
       return session
     },

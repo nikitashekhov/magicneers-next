@@ -59,6 +59,7 @@ export default function Dashboard() {
                     <p><strong>Email:</strong> {session.user.email}</p>
                     <p><strong>Name:</strong> {session.user.name || "Not provided"}</p>
                     <p><strong>User ID:</strong> {session.user.id}</p>
+                    <p><strong>Role:</strong> {(session.user as any).role}</p>
                   </div>
                 </div>
               )}
