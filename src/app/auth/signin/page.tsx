@@ -12,7 +12,7 @@ export default function SignIn() {
   const [step, setStep] = useState<"email" | "otp">("email")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
-  const { status } = useSession()
+  const { status, data: session } = useSession()
   const router = useRouter()
   
   useEffect(() => {

@@ -27,7 +27,7 @@ export default async function CertificatesPage() {
       }
     });
 
-    console.log(certificates);
+    // console.log(certificates);
 
     return <CertificatesClient certificates={certificates} />;
   } catch (error) {
