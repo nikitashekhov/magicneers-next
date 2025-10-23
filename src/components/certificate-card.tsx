@@ -148,7 +148,7 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
 
         {/* Приватная информация */}
         {showPrivateInfo && (
-          <div className="mt-4 pt-4 border-t border-gray-200 space-y-2 text-sm">
+          <div className="mt-4 pt-4 border-t border-gray-200 space-y-4 text-sm">
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <span className="font-medium text-gray-700">Техник:</span>
@@ -171,6 +171,97 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
                   Фото: {(parseInt(certificate.smilePhoto.size) / 1024 / 1024).toFixed(1)} MB<br />
                   Копия: {(parseInt(certificate.digitalCopy.size) / 1024 / 1024).toFixed(1)} MB
                 </p>
+              </div>
+            </div>
+
+            {/* Зубная формула */}
+            <div>
+              <span className="font-medium text-gray-700 block mb-2">Зубная формула:</span>
+              <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="overflow-auto flex flex-col text-xs">
+                  <div className="flex gap-1">
+                    <div className="self-center font-bold text-xs">
+                      Прав
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <div className="text-center font-bold text-xs">
+                        Верхняя челюсть
+                      </div>
+                      <div>
+                        <div className="flex">
+                          {/* Top Right Teeth (18-11) */}
+                          <div className="flex gap-0 border-b border-r border-gray-400 pr-1 pb-1">
+                            {[18, 17, 16, 15, 14, 13, 12, 11].map((toothNumber, index) => {
+                              const isSelected = certificate.dentalFormula?.top?.right?.[7-index] || false;
+                              return (
+                                <div key={`top-right-${index}`} className="w-6 h-6 flex items-center justify-center">
+                                  <div className={`w-4 h-4 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
+                                    isSelected ? 'bg-blue-500 text-white' : 'bg-white'
+                                  }`}>
+                                    {toothNumber}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {/* Top Left Teeth (21-28) */}
+                          <div className="flex gap-0 border-b border-gray-400 pl-1 pb-1">
+                            {[21, 22, 23, 24, 25, 26, 27, 28].map((toothNumber, index) => {
+                              const isSelected = certificate.dentalFormula?.top?.left?.[index] || false;
+                              return (
+                                <div key={`top-left-${index}`} className="w-6 h-6 flex items-center justify-center">
+                                  <div className={`w-4 h-4 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
+                                    isSelected ? 'bg-blue-500 text-white' : 'bg-white'
+                                  }`}>
+                                    {toothNumber}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <div className="flex">
+                          {/* Bottom Right Teeth (48-41) */}
+                          <div className="flex gap-0 pr-1 pt-1 border-r border-gray-400">
+                            {[48, 47, 46, 45, 44, 43, 42, 41].map((toothNumber, index) => {
+                              const isSelected = certificate.dentalFormula?.bottom?.right?.[7-index] || false;
+                              return (
+                                <div key={`bottom-right-${index}`} className="w-6 h-6 flex items-center justify-center">
+                                  <div className={`w-4 h-4 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
+                                    isSelected ? 'bg-blue-500 text-white' : 'bg-white'
+                                  }`}>
+                                    {toothNumber}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          {/* Bottom Left Teeth (31-38) */}
+                          <div className="flex gap-0 pt-1 pl-1">
+                            {[31, 32, 33, 34, 35, 36, 37, 38].map((toothNumber, index) => {
+                              const isSelected = certificate.dentalFormula?.bottom?.left?.[index] || false;
+                              return (
+                                <div key={`bottom-left-${index}`} className="w-6 h-6 flex items-center justify-center">
+                                  <div className={`w-4 h-4 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
+                                    isSelected ? 'bg-blue-500 text-white' : 'bg-white'
+                                  }`}>
+                                    {toothNumber}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-center font-bold text-xs">
+                        Нижняя челюсть
+                      </div>
+                    </div>
+                    <div className="self-center font-bold text-xs">
+                      Лев
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

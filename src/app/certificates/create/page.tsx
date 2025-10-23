@@ -19,14 +19,24 @@ export default function TestCertificatePage() {
     materialColor: 'Color 1',
     fixationType: 'Type 2',
     fixationColor: 'Color 2',
-    dentalFormula: JSON.stringify({
+    dentalFormulaData: {
       "top": {
-        "right": ["1", "1", "1", "1", "1", "1", "1", false],
-        "left": ["1", "1", "1", "1", "1", "1", "1", false]
+        "right": [false, false, false, false, false, false, false, false],
+        "left": [false, false, false, false, false, false, false, false]
       },
       "bottom": {
-        "right": ["1", "1", "1", "1", "1", "1", "1", false],
-        "left": ["1", "1", "1", "1", "1", "1", "1", false]
+        "right": [false, false, false, false, false, false, false, false],
+        "left": [false, false, false, false, false, false, false, false]
+      }
+    },
+    dentalFormula: JSON.stringify({
+      "top": {
+        "right": [false, false, false, false, false, false, false, false],
+        "left": [false, false, false, false, false, false, false, false]
+      },
+      "bottom": {
+        "right": [false, false, false, false, false, false, false, false],
+        "left": [false, false, false, false, false, false, false, false]
       }
     })
   });
@@ -46,7 +56,15 @@ export default function TestCertificatePage() {
       
       // Добавляем все текстовые поля
       Object.entries(formData).forEach(([key, value]) => {
-        formDataToSend.append(key, value);
+        if (key === 'dentalFormulaData') {
+          // Skip dentalFormulaData as it's only used for UI state
+          return;
+        }
+        if (typeof value === 'object' && value !== null) {
+          formDataToSend.append(key, JSON.stringify(value));
+        } else {
+          formDataToSend.append(key, String(value));
+        }
       });
 
       // Добавляем файлы
@@ -238,6 +256,134 @@ export default function TestCertificatePage() {
               onChange={(e) => setFormData({...formData, fixationColor: e.target.value})}
               className="w-full p-2 border rounded"
             />
+          </div>
+        </div>
+
+        {/* Dental Formula Section */}
+        <div className="overflow-auto flex flex-col text-sm">
+          <div className="flex gap-2">
+            <div className="self-center font-bold">
+              Right
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="text-center font-bold text-sm must14">
+                Upper Jaw
+              </div>
+              <div>
+                <div className="flex">
+                  {/* Top Right Teeth (18-11) */}
+                  <div className="flex gap-0 border-b border-r border-black pr-2 pb-1">
+                    {[18, 17, 16, 15, 14, 13, 12, 11].map((toothNumber, index) => (
+                      <div key={`top-right-${index}`} className="veneer">
+                        <label className="flex flex-col items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={formData.dentalFormulaData?.top?.right?.[7-index] || false}
+                            onChange={(e) => {
+                              const newFormula = { ...formData.dentalFormulaData };
+                              if (!newFormula.top) newFormula.top = { right: [], left: [] };
+                              if (!newFormula.top.right) newFormula.top.right = new Array(8).fill(false);
+                              newFormula.top.right[7-index] = e.target.checked;
+                              setFormData({
+                                ...formData,
+                                dentalFormulaData: newFormula,
+                                dentalFormula: JSON.stringify(newFormula)
+                              });
+                            }}
+                            className="mb-1"
+                          />
+                          <span className="text-xs">{toothNumber}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Top Left Teeth (21-28) */}
+                  <div className="flex gap-0 border-b border-black pl-2 pb-1">
+                    {[21, 22, 23, 24, 25, 26, 27, 28].map((toothNumber, index) => (
+                      <div key={`top-left-${index}`} className="veneer">
+                        <label className="flex flex-col items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={formData.dentalFormulaData?.top?.left?.[index] || false}
+                            onChange={(e) => {
+                              const newFormula = { ...formData.dentalFormulaData };
+                              if (!newFormula.top) newFormula.top = { right: [], left: [] };
+                              if (!newFormula.top.left) newFormula.top.left = new Array(8).fill(false);
+                              newFormula.top.left[index] = e.target.checked;
+                              setFormData({
+                                ...formData,
+                                dentalFormulaData: newFormula,
+                                dentalFormula: JSON.stringify(newFormula)
+                              });
+                            }}
+                            className="mb-1"
+                          />
+                          <span className="text-xs">{toothNumber}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex">
+                  {/* Bottom Right Teeth (48-41) */}
+                  <div className="flex gap-0 pr-2 pt-1 border-r border-black">
+                    {[48, 47, 46, 45, 44, 43, 42, 41].map((toothNumber, index) => (
+                      <div key={`bottom-right-${index}`} className="veneer">
+                        <label className="flex flex-col items-center cursor-pointer">
+                          <span className="text-xs mb-1">{toothNumber}</span>
+                          <input
+                            type="checkbox"
+                            checked={formData.dentalFormulaData?.bottom?.right?.[7-index] || false}
+                            onChange={(e) => {
+                              const newFormula = { ...formData.dentalFormulaData };
+                              if (!newFormula.bottom) newFormula.bottom = { right: [], left: [] };
+                              if (!newFormula.bottom.right) newFormula.bottom.right = new Array(8).fill(false);
+                              newFormula.bottom.right[7-index] = e.target.checked;
+                              setFormData({
+                                ...formData,
+                                dentalFormulaData: newFormula,
+                                dentalFormula: JSON.stringify(newFormula)
+                              });
+                            }}
+                          />
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Bottom Left Teeth (31-38) */}
+                  <div className="flex gap-0 pt-1 pl-2">
+                    {[31, 32, 33, 34, 35, 36, 37, 38].map((toothNumber, index) => (
+                      <div key={`bottom-left-${index}`} className="veneer">
+                        <label className="flex flex-col items-center cursor-pointer">
+                          <span className="text-xs mb-1">{toothNumber}</span>
+                          <input
+                            type="checkbox"
+                            checked={formData.dentalFormulaData?.bottom?.left?.[index] || false}
+                            onChange={(e) => {
+                              const newFormula = { ...formData.dentalFormulaData };
+                              if (!newFormula.bottom) newFormula.bottom = { right: [], left: [] };
+                              if (!newFormula.bottom.left) newFormula.bottom.left = new Array(8).fill(false);
+                              newFormula.bottom.left[index] = e.target.checked;
+                              setFormData({
+                                ...formData,
+                                dentalFormulaData: newFormula,
+                                dentalFormula: JSON.stringify(newFormula)
+                              });
+                            }}
+                          />
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="text-center font-bold must14">
+                Bottom Jaw
+              </div>
+            </div>
+            <div className="self-center font-bold">
+              Left
+            </div>
           </div>
         </div>
 
