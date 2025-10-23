@@ -327,6 +327,39 @@ export default function EditCertificateForm({ certificate }: EditCertificateForm
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
+                Город клиники *
+              </label>
+              <select
+                value={formData.clinicCity}
+                onChange={(e) => {
+                  const selectedCity = e.target.value;
+                  let clinicName = formData.clinicName;
+                  
+                  // Автоматически изменяем название клиники в зависимости от города
+                  if (selectedCity === 'Москва' || selectedCity === 'Барвиха') {
+                    clinicName = 'AestheticA';
+                  } else if (selectedCity === 'Дубай') {
+                    clinicName = 'Aesthet';
+                  }
+                  
+                  setFormData({
+                    ...formData, 
+                    clinicCity: selectedCity,
+                    clinicName: clinicName
+                  });
+                }}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+                required
+              >
+                <option value="">Выберите город</option>
+                <option value="Барвиха">Барвиха</option>
+                <option value="Москва">Москва</option>
+                <option value="Дубай">Дубай</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Название клиники *
               </label>
               <input
@@ -335,19 +368,7 @@ export default function EditCertificateForm({ certificate }: EditCertificateForm
                 onChange={(e) => setFormData({...formData, clinicName: e.target.value})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
                 required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Город клиники *
-              </label>
-              <input
-                type="text"
-                value={formData.clinicCity}
-                onChange={(e) => setFormData({...formData, clinicCity: e.target.value})}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
-                required
+                disabled={true}
               />
             </div>
           </div>
@@ -450,11 +471,11 @@ export default function EditCertificateForm({ certificate }: EditCertificateForm
         <div className="overflow-auto flex flex-col text-sm">
           <div className="flex gap-2">
             <div className="self-center font-bold">
-              Right
+              Правая сторона
             </div>
             <div className="flex flex-col gap-2">
               <div className="text-center font-bold text-sm must14">
-                Upper Jaw
+                Верхняя челюсть
               </div>
               <div>
                 <div className="flex">
@@ -565,11 +586,11 @@ export default function EditCertificateForm({ certificate }: EditCertificateForm
                 </div>
               </div>
               <div className="text-center font-bold must14">
-                Bottom Jaw
+                Нижняя челюсть
               </div>
             </div>
             <div className="self-center font-bold">
-              Left
+              Левая сторона
             </div>
           </div>
         </div>

@@ -112,6 +112,19 @@ export default function CertificatesClient({ certificates }: CertificatesClientP
                 <option value="date">Дата/Название</option>
               </select>
             </div>
+            <div className="sm:w-48">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Действия
+              </label>
+              <a
+                href={`/certificates/create?${new URLSearchParams({
+                  lastIndex: certificates.length.toString()
+                }).toString()}`}
+                className="w-full px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 inline-flex items-center justify-center"
+              >
+                Создать сертификат
+              </a>
+            </div>
           </div>
         </div>
 

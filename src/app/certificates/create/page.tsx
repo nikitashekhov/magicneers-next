@@ -1,24 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function TestCertificatePage() {
   const [formData, setFormData] = useState({
     title: 'Magicneers #1',
-    installationDate: '2024-01-15',
-    userFirstName: 'John',
-    userLastName: 'Doe',
-    userEmail: 'john.doe@example.com',
-    doctorFirstName: 'Artavazd',
-    doctorLastName: 'Manukyan',
+    installationDate: new Date().toISOString().split('T')[0],
+    userFirstName: '',
+    userLastName: '',
+    userEmail: '',
+    doctorFirstName: '',
+    doctorLastName: '',
     clinicName: 'AestheticA',
-    clinicCity: 'Moscow',
-    technicianFirstName: 'Nikita',
-    technicianLastName: 'Nikitin',
-    materialType: 'Type 1',
-    materialColor: 'Color 1',
-    fixationType: 'Type 2',
-    fixationColor: 'Color 2',
+    clinicCity: 'Москва',
+    technicianFirstName: '',
+    technicianLastName: '',
+    materialType: '',
+    materialColor: '',
+    fixationType: '',
+    fixationColor: '',
     dentalFormulaData: {
       "top": {
         "right": [false, false, false, false, false, false, false, false],
@@ -45,6 +46,15 @@ export default function TestCertificatePage() {
   const [digitalCopy, setDigitalCopy] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const searchParams = useSearchParams();
+  
+  useEffect(() => {
+    const lastIndex = parseInt(searchParams.get('lastIndex') || '0');
+    setFormData({
+      ...formData,
+      title: `Magicneers #${lastIndex + 1}`
+    });
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,11 +101,11 @@ export default function TestCertificatePage() {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Test Certificate Creation</h1>
+      <h1 className="text-2xl font-bold mb-6">Создание сертификата</h1>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Title</label>
+          <label className="block text-sm font-medium mb-1">Название</label>
           <input
             type="text"
             value={formData.title}
@@ -107,7 +117,7 @@ export default function TestCertificatePage() {
 
 
         <div>
-          <label className="block text-sm font-medium mb-1">Installation Date</label>
+          <label className="block text-sm font-medium mb-1">Дата установки</label>
           <input
             type="date"
             value={formData.installationDate}
@@ -119,10 +129,10 @@ export default function TestCertificatePage() {
 
         {/* User Information */}
         <div className="p-4 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">User Information</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Информация о пациенте</h3>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
-              <label className="block text-sm font-medium mb-1">User First Name</label>
+              <label className="block text-sm font-medium mb-1">Имя пациента</label>
               <input
                 type="text"
                 value={formData.userFirstName}
@@ -132,7 +142,7 @@ export default function TestCertificatePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">User Last Name</label>
+              <label className="block text-sm font-medium mb-1">Фамилия пациента</label>
               <input
                 type="text"
                 value={formData.userLastName}
@@ -142,7 +152,7 @@ export default function TestCertificatePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">User Email</label>
+              <label className="block text-sm font-medium mb-1">Email пациента</label>
               <input
                 type="email"
                 value={formData.userEmail}
@@ -156,7 +166,7 @@ export default function TestCertificatePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Doctor First Name</label>
+            <label className="block text-sm font-medium mb-1">Имя врача</label>
             <input
               type="text"
               value={formData.doctorFirstName}
@@ -165,7 +175,7 @@ export default function TestCertificatePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Doctor Last Name</label>
+            <label className="block text-sm font-medium mb-1">Фамилия врача</label>
             <input
               type="text"
               value={formData.doctorLastName}
@@ -176,29 +186,50 @@ export default function TestCertificatePage() {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
+        <div>
+            <label className="block text-sm font-medium mb-1">Город клиники</label>
+            <select
+              value={formData.clinicCity}
+              onChange={(e) => {
+                const selectedCity = e.target.value;
+                let clinicName = formData.clinicName;
+                
+                // Автоматически изменяем название клиники в зависимости от города
+                if (selectedCity === 'Москва' || selectedCity === 'Барвиха') {
+                  clinicName = 'AestheticA';
+                } else if (selectedCity === 'Дубай') {
+                  clinicName = 'Aesthet';
+                }
+                
+                setFormData({
+                  ...formData, 
+                  clinicCity: selectedCity,
+                  clinicName: clinicName
+                });
+              }}
+              className="w-full p-2 border rounded"
+            >
+              <option value="">Выберите город</option>
+              <option value="Барвиха">Барвиха</option>
+              <option value="Москва">Москва</option>
+              <option value="Дубай">Дубай</option>
+            </select>
+          </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Clinic Name</label>
+            <label className="block text-sm font-medium mb-1">Название клиники</label>
             <input
               type="text"
               value={formData.clinicName}
               onChange={(e) => setFormData({...formData, clinicName: e.target.value})}
               className="w-full p-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Clinic City</label>
-            <input
-              type="text"
-              value={formData.clinicCity}
-              onChange={(e) => setFormData({...formData, clinicCity: e.target.value})}
-              className="w-full p-2 border rounded"
+              disabled={true}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Technician First Name</label>
+            <label className="block text-sm font-medium mb-1">Имя техника</label>
             <input
               type="text"
               value={formData.technicianFirstName}
@@ -207,7 +238,7 @@ export default function TestCertificatePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Technician Last Name</label>
+            <label className="block text-sm font-medium mb-1">Фамилия техника</label>
             <input
               type="text"
               value={formData.technicianLastName}
@@ -219,7 +250,7 @@ export default function TestCertificatePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Material Type</label>
+            <label className="block text-sm font-medium mb-1">Тип материала</label>
             <input
               type="text"
               value={formData.materialType}
@@ -228,7 +259,7 @@ export default function TestCertificatePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Material Color</label>
+            <label className="block text-sm font-medium mb-1">Цвет материала</label>
             <input
               type="text"
               value={formData.materialColor}
@@ -240,7 +271,7 @@ export default function TestCertificatePage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Fixation Type</label>
+            <label className="block text-sm font-medium mb-1">Тип фиксации</label>
             <input
               type="text"
               value={formData.fixationType}
@@ -249,7 +280,7 @@ export default function TestCertificatePage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Fixation Color</label>
+            <label className="block text-sm font-medium mb-1">Цвет фиксации</label>
             <input
               type="text"
               value={formData.fixationColor}
@@ -263,11 +294,11 @@ export default function TestCertificatePage() {
         <div className="overflow-auto flex flex-col text-sm">
           <div className="flex gap-2">
             <div className="self-center font-bold">
-              Right
+              Правая сторона
             </div>
             <div className="flex flex-col gap-2">
               <div className="text-center font-bold text-sm must14">
-                Upper Jaw
+                Верхняя челюсть
               </div>
               <div>
                 <div className="flex">
@@ -378,17 +409,17 @@ export default function TestCertificatePage() {
                 </div>
               </div>
               <div className="text-center font-bold must14">
-                Bottom Jaw
+                Нижняя челюсть
               </div>
             </div>
             <div className="self-center font-bold">
-              Left
+              Левая сторона
             </div>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Smile Photo</label>
+          <label className="block text-sm font-medium mb-1">Фото улыбки</label>
           <input
             type="file"
             accept="image/*"
@@ -399,7 +430,7 @@ export default function TestCertificatePage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Digital Copy (ZIP/STL)</label>
+          <label className="block text-sm font-medium mb-1">Цифровая копия (ZIP/STL)</label>
           <input
             type="file"
             accept=".zip,.stl"
@@ -414,13 +445,13 @@ export default function TestCertificatePage() {
           disabled={loading}
           className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:opacity-50"
         >
-          {loading ? 'Creating Certificate...' : 'Create Certificate'}
+          {loading ? 'Создание сертификата...' : 'Создать сертификат'}
         </button>
       </form>
 
       {result && (
         <div className="mt-6 p-4 border rounded">
-          <h3 className="font-bold mb-2">Result:</h3>
+          <h3 className="font-bold mb-2">Результат:</h3>
           <pre className="bg-gray-100 p-2 rounded text-sm overflow-auto text-black">
             {JSON.stringify(result, null, 2)}
           </pre>
