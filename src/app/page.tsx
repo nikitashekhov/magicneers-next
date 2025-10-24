@@ -3,6 +3,7 @@ import CertificateCardPublic from '@/components/certificate-card-public';
 import UserAvatar from '@/components/user-avatar';
 import { prisma } from '@/lib/prisma';
 import { Certificate } from '@/types/index';
+import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
 export default async function Home() {
@@ -16,6 +17,22 @@ export default async function Home() {
       createdAt: 'desc',
     },
   });
+
+  if(certificates.length !== 0) {
+  const hasUpdatedToday = certificates.some(cert => {
+    const today = new Date();
+    const certUpdateDate = new Date(cert.updatedAt);
+    return (
+      certUpdateDate.getDate() === today.getDate() &&
+      certUpdateDate.getMonth() === today.getMonth() &&
+      certUpdateDate.getFullYear() === today.getFullYear()
+    );
+  });
+
+  if (hasUpdatedToday) {
+    revalidatePath('/');
+  }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

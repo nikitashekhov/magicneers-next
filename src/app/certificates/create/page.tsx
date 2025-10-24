@@ -1,9 +1,10 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 
 function TestCertificateContent() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     title: 'Magicneers #1',
     installationDate: new Date().toISOString().split('T')[0],
@@ -537,10 +538,50 @@ function TestCertificateContent() {
 
             {result && (
               <div className="mt-6 p-4 border rounded">
-                <h3 className="font-bold mb-2">Результат:</h3>
-                <pre className="bg-gray-100 p-2 rounded text-sm overflow-auto text-black">
-                  {JSON.stringify(result, null, 2)}
-                </pre>
+                {result.success ? (
+                  <div className="bg-green-50 border border-green-200 rounded-md p-4">
+                    <div className="flex">
+                      <div className="shrink-0">
+                        <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-green-800">
+                          Сертификат успешно создан!
+                        </h3>
+                        <div className="mt-4">
+                          <div className="-mx-2 -my-1.5 flex">
+                            <button
+                              onClick={() => router.push('/certificates')}
+                              className="bg-green-50 px-2 py-1.5 rounded-md text-sm font-medium text-green-800 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
+                            >
+                              Перейти к списку сертификатов
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-red-50 border border-red-200 rounded-md p-4">
+                    <div className="flex">
+                      <div className="shrink-0">
+                        <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-red-800">
+                          Ошибка создания сертификата
+                        </h3>
+                        <div className="mt-2 text-sm text-red-700">
+                          <p>{result.error || 'Произошла неизвестная ошибка'}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
