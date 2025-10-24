@@ -1,52 +1,58 @@
-'use client';
 
+import CertificateCardPublic from '@/components/certificate-card-public';
+import UserAvatar from '@/components/user-avatar';
+import { prisma } from '@/lib/prisma';
+import { Certificate } from '@/types/index';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { useSession } from 'next-auth/react';
 
-export default function Home() {
-  const { data: session, status } = useSession();
+export default async function Home() {
+
+  const certificates = await prisma.certificate.findMany({
+    include: {
+      smilePhoto: true,
+      digitalCopy: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-16">
-        <main className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-4">
-              Magicneers
-            </h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Заголовок */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                <Link href="/" className="text-blue-600">Magicneers</Link> Сертификаты
+              </h1>
+            </div>
             
-            {/* Authentication Section */}
-            <div className="mb-8">
-              {status === "loading" ? (
-                <div className="animate-pulse bg-gray-200 h-10 w-32 mx-auto rounded"></div>
-              ) : session ? (
-                <div className="space-y-4">
-                  <p className="text-lg text-gray-700 dark:text-gray-300">
-                    Welcome back, <span className="font-semibold">{session.user?.email}</span>! 🎉
-                  </p>
-                  <div className="flex justify-center gap-4">
-                    <Link href={((session.user as { role?: string }).role === "admin") ? "/certificates" : "/dashboard"}>
-                      <Button>Go to Dashboard</Button>
-                    </Link>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <p className="text-lg text-gray-700 dark:text-gray-300">
-                    Get started with OTP authentication
-                  </p>
-                  <div className="flex justify-center gap-4">
-                    <Link href="/auth/signin">
-                      <Button>Sign In with OTP</Button>
-                    </Link>
-                  </div>
-                </div>
-              )}
+            <div className="flex items-center space-x-4">
+              <UserAvatar />
             </div>
           </div>
-      </main>
+        </div>
+
+        {/* Сетка сертификатов */}
+        {certificates.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">📄</div>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">
+              Сертификаты отсутствуют
+            </h3>
+            <p className="text-gray-500">
+              Сертификаты будут отображаться здесь после их создания
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {certificates.map((certificate) => (
+              <CertificateCardPublic key={certificate.id} certificate={certificate as unknown as Certificate} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

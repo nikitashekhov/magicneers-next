@@ -17,7 +17,11 @@ export default function SignIn() {
   
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/dashboard")
+      if ((session?.user as any).role === "admin") {
+        router.push("/certificates")
+      } else {
+        router.push("/dashboard")
+      }
     }
   }, [status, router])
 
@@ -33,12 +37,12 @@ export default function SignIn() {
       })
 
       if (result?.error) {
-        setError("Failed to send OTP. Please try again.")
+        setError("Не удалось отправить код. Попробуйте еще раз.")
       } else {
         setStep("otp")
       }
     } catch {
-      setError("An error occurred. Please try again.")
+      setError("Произошла ошибка. Попробуйте еще раз.")
     } finally {
       setIsLoading(false)
     }
@@ -58,13 +62,13 @@ export default function SignIn() {
       })
 
       if (result?.error) {
-        setError("Invalid or expired OTP. Please try again.")
+        setError("Неверный или истекший код. Попробуйте еще раз.")
       } else if (result?.ok) {
         // Redirect to dashboard after successful sign-in
         window.location.href = "/dashboard"
       }
     } catch {
-      setError("An error occurred. Please try again.")
+      setError("Произошла ошибка. Попробуйте еще раз.")
     } finally {
       setIsLoading(false)
     }
@@ -81,12 +85,12 @@ export default function SignIn() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {step === "email" ? "Sign in to your account" : "Enter verification code"}
+            {step === "email" ? "Войдите в свой аккаунт" : "Введите код подтверждения"}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             {step === "email"
-              ? "Enter your email address to receive a verification code"
-              : `We sent a 6-digit code to ${email}`}
+              ? "Введите ваш email адрес для получения кода подтверждения"
+              : `Мы отправили 6-значный код на ${email}`}
           </p>
         </div>
 
@@ -98,7 +102,7 @@ export default function SignIn() {
             {step === "email" ? (
               <div>
                 <label htmlFor="email" className="sr-only">
-                  Email address
+                  Email адрес
                 </label>
                 <Input
                   id="email"
@@ -107,7 +111,7 @@ export default function SignIn() {
                   autoComplete="email"
                   required
                   className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Email address"
+                  placeholder="Email адрес"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -115,7 +119,7 @@ export default function SignIn() {
             ) : (
               <div>
                 <label htmlFor="otp" className="sr-only">
-                  Verification code
+                  Код подтверждения
                 </label>
                 <Input
                   id="otp"
@@ -143,7 +147,7 @@ export default function SignIn() {
               disabled={isLoading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
-              {isLoading ? "Processing..." : step === "email" ? "Send Code" : "Verify Code"}
+              {isLoading ? "Обработка..." : step === "email" ? "Отправить код" : "Подтвердить код"}
             </Button>
 
             {step === "otp" && (
@@ -151,9 +155,9 @@ export default function SignIn() {
                 type="button"
                 variant="outline"
                 onClick={handleBackToEmail}
-                className="w-full"
+                className="w-full text-black"
               >
-                Back to Email
+                Назад к Email
               </Button>
             )}
           </div>
@@ -168,7 +172,7 @@ export default function SignIn() {
                 }}
                 className="text-sm text-indigo-600 hover:text-indigo-500"
               >
-                Resend code
+                Отправить код повторно
               </button>
             </div>
           )}

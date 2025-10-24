@@ -41,23 +41,23 @@ const customEmailProvider = EmailProvider({
     await transporter.sendMail({
       from: process.env.EMAIL_FROM!,
       to: email,
-      subject: `Your OTP code for ${process.env.NEXTAUTH_URL}`,
+      subject: `Ваш код подтверждения для ${process.env.NEXTAUTH_URL}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">Your OTP Code</h2>
-          <p>Use the following code to sign in:</p>
+          <h2 style="color: #333;">Ваш код подтверждения</h2>
+          <p>Используйте следующий код для входа в систему:</p>
           <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
             <h1 style="font-size: 32px; letter-spacing: 5px; color: #333; margin: 0;">${otp}</h1>
           </div>
           <p style="color: #666; font-size: 14px;">
-            This code will expire in 10 minutes. If you didn't request this code, please ignore this email.
+            Этот код действителен в течение 10 минут. Если вы не запрашивали этот код, проигнорируйте это письмо.
           </p>
           <p style="color: #666; font-size: 12px; margin-top: 20px;">
-            Or click this link to sign in: <a href="${url}">${url}</a>
+            Или нажмите на эту ссылку для входа: <a href="${url}">${url}</a>
           </p>
         </div>
       `,
-      text: `Your OTP code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nOr click this link to sign in: ${url}`,
+      text: `Ваш код подтверждения: ${otp}\n\nЭтот код действителен в течение 10 минут.\n\nИли нажмите на эту ссылку для входа: ${url}`,
     })
   },
 })

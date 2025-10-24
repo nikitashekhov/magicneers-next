@@ -13,28 +13,28 @@ export default function AuthErrorPage() {
     switch (error) {
       case "Configuration":
         return {
-          title: "Server Error",
-          message: "There is a problem with the server configuration.",
-          suggestion: "Please try again later or contact support if the problem persists."
+          title: "Ошибка сервера",
+          message: "Проблема с конфигурацией сервера.",
+          suggestion: "Попробуйте позже или обратитесь в поддержку, если проблема сохраняется."
         }
       case "AccessDenied":
         return {
-          title: "Access Denied",
-          message: "You do not have permission to sign in.",
-          suggestion: "Please contact your administrator if you believe this is an error."
+          title: "Доступ запрещен",
+          message: "У вас нет разрешения на вход в систему.",
+          suggestion: "Обратитесь к администратору, если считаете, что это ошибка."
         }
       case "Verification":
         return {
-          title: "Link Expired",
-          message: "The sign in link is no longer valid.",
-          suggestion: "It may have been used already or it may have expired. Please request a new one."
+          title: "Ссылка истекла",
+          message: "Ссылка для входа больше не действительна.",
+          suggestion: "Возможно, она уже была использована или истекла. Запросите новую."
         }
       case "Default":
       default:
         return {
-          title: "Unable to Sign In",
-          message: "An error occurred during the sign in process.",
-          suggestion: "Please try again or contact support if the problem persists."
+          title: "Невозможно войти",
+          message: "Произошла ошибка в процессе входа в систему.",
+          suggestion: "Попробуйте снова или обратитесь в поддержку, если проблема сохраняется."
         }
     }
   }
@@ -63,14 +63,14 @@ export default function AuthErrorPage() {
           <Link href="/auth/signin" className="w-full">
             <Button className="w-full flex items-center justify-center gap-2">
               <RefreshCw className="h-4 w-4" />
-              Try Again
+              Попробовать снова
             </Button>
           </Link>
           
           <Link href="/" className="w-full">
             <Button variant="outline" className="w-full flex items-center justify-center gap-2">
               <ArrowLeft className="h-4 w-4" />
-              Back to Home
+              На главную
             </Button>
           </Link>
         </div>
@@ -78,14 +78,14 @@ export default function AuthErrorPage() {
         {error === "Verification" && (
           <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
             <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
-              Need a new verification code?
+              Нужен новый код подтверждения?
             </h3>
             <p className="text-sm text-blue-600 dark:text-blue-300 mb-3">
-              If you need a new OTP code, you can request one by signing in again.
+              Если вам нужен новый OTP код, вы можете запросить его, войдя в систему снова.
             </p>
             <Link href="/auth/signin">
               <Button variant="outline" size="sm" className="text-blue-600 border-blue-300 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-600 dark:hover:bg-blue-900/20">
-                Request New Code
+                Запросить новый код
               </Button>
             </Link>
           </div>
@@ -93,7 +93,7 @@ export default function AuthErrorPage() {
 
         <div className="text-center">
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            Error code: {error || "Unknown"}
+            Код ошибки: {error || "Неизвестно"}
           </p>
         </div>
       </div>

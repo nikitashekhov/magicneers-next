@@ -93,7 +93,7 @@ export default function CertificatesClient({ certificates }: CertificatesClientP
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Введите поисковый запрос..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               />
             </div>
             <div className="sm:w-48">
@@ -104,7 +104,7 @@ export default function CertificatesClient({ certificates }: CertificatesClientP
                 id="filter"
                 value={filterBy}
                 onChange={(e) => setFilterBy(e.target.value as 'all' | 'doctor' | 'clinic' | 'date')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
               >
                 <option value="all">Всё</option>
                 <option value="doctor">Врач</option>
@@ -147,31 +147,6 @@ export default function CertificatesClient({ certificates }: CertificatesClientP
             {filteredCertificates.map((certificate) => (
               <CertificateCard key={certificate.id} certificate={certificate} />
             ))}
-          </div>
-        )}
-
-        {/* Статистика */}
-        {certificates.length > 0 && (
-          <div className="mt-12 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Статистика</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{certificates.length}</div>
-                <div className="text-sm text-gray-600">Всего сертификатов</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {new Set(certificates.map(c => c.clinicName)).size}
-                </div>
-                <div className="text-sm text-gray-600">Уникальных клиник</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">
-                  {new Set(certificates.map(c => `${c.doctorFirstName} ${c.doctorLastName}`)).size}
-                </div>
-                <div className="text-sm text-gray-600">Уникальных врачей</div>
-              </div>
-            </div>
           </div>
         )}
       </div>

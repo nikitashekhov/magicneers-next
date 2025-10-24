@@ -6,13 +6,6 @@ export interface BaseEntity {
   updatedAt: Date;
 }
 
-export interface User extends BaseEntity {
-  name: string;
-  email: string;
-  avatar?: string;
-  role: 'admin' | 'user' | 'moderator';
-}
-
 export interface ApiResponse<T = unknown> {
   data: T;
   message?: string;
@@ -105,4 +98,43 @@ export interface AppError {
 export interface ErrorBoundaryState {
   hasError: boolean;
   error?: Error;
+}
+
+
+export interface File {
+  id: string;
+  name: string;
+  type: string;
+  size: string;
+  link: string;
+}
+
+export interface User {
+  id: string;
+  name: string | null;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+}
+
+export interface Certificate {
+  id: string;
+  title: string;
+  installationDate: Date;
+  user: User;
+  smilePhoto: File;
+  digitalCopy: File;
+  doctorFirstName: string;
+  doctorLastName: string;
+  clinicName: string;
+  clinicCity: string;
+  technicianFirstName: string;
+  technicianLastName: string;
+  materialType: string;
+  materialColor: string;
+  fixationType: string;
+  fixationColor: string;
+  dentalFormula: any;
+  createdAt: Date;
+  updatedAt: Date;
 }

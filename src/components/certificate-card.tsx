@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 
 interface File {
   id: string;
@@ -48,6 +49,7 @@ interface CertificateCardProps {
 export default function CertificateCard({ certificate }: CertificateCardProps) {
   const [showPrivateInfo, setShowPrivateInfo] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const { data: session, status } = useSession();
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('ru-RU', {
@@ -287,12 +289,13 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
               Скачать копию
             </a>
           </div>
-          <a
+          {session && ((session.user as any).role === 'admin') && <a
             href={`/certificates/edit/${certificate.id}`}
             className="w-full bg-orange-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-orange-600 transition-colors block"
           >
             Редактировать
           </a>
+          }
         </div>
       </div>
     </div>

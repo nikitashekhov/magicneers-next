@@ -1,80 +1,84 @@
-"use client"
+import { auth } from '@/auth';
+import { prisma } from '@/lib/prisma';
+import { redirect } from 'next/navigation';
+import CertificateCard from '@/components/certificate-card';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Certificate } from '@/types';
 
-import { useSession, signOut } from "next-auth/react"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+export default async function Dashboard() {
+  const session = await auth();
 
-export default function Dashboard() {
-  const { data: session, status } = useSession()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/auth/signin")
-    }
-  }, [status, router])
-
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
+  if (!session || !session.user || !session.user.id) {
+    redirect('/auth/signin');
   }
 
-  if (status === "unauthenticated") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Redirecting to sign in...</p>
-        </div>
-      </div>
-    )
+  const userRole = (session.user as any).role;
+
+  // Если пользователь admin, перенаправляем на /certificates
+  if (userRole === 'admin') {
+    redirect('/certificates');
+  }
+
+  // Получаем сертификаты для пользователя с ролью user
+  let certificates: Certificate[] = [];
+  try {
+    certificates = await prisma.certificate.findMany({
+      where: {
+        userId: session.user.id
+      },
+      include: {
+        user: true,
+        smilePhoto: true,
+        digitalCopy: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching certificates:', error);
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 py-6 sm:px-0">
-          <div className="border-4 border-dashed border-gray-200 rounded-lg p-8">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                Welcome to your Dashboard!
-              </h1>
-              <p className="text-lg text-gray-600 mb-6">
-                You are successfully authenticated with OTP.
-              </p>
-              
-              {session?.user && (
-                <div className="bg-white rounded-lg shadow p-6 mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                    User Information
-                  </h2>
-                  <div className="space-y-2">
-                    <p><strong>Email:</strong> {session.user.email}</p>
-                    <p><strong>Name:</strong> {session.user.name || "Not provided"}</p>
-                    <p><strong>User ID:</strong> {session.user.id}</p>
-                    <p><strong>Role:</strong> {(session.user as any).role}</p>
-                  </div>
-                </div>
-              )}
 
-              <Button
-                onClick={() => signOut({ callbackUrl: "/" })}
-                variant="outline"
-                className="bg-red-600 text-white hover:bg-red-700"
-              >
-                Sign Out
-              </Button>
-            </div>
+          {/* Сертификаты пользователя */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Ваши сертификаты
+            </h2>
+            
+            {certificates.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-gray-400 text-6xl mb-4">📄</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Сертификаты не найдены
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  У вас пока нет созданных сертификатов.
+                </p>
+                <Link href="/certificates/create">
+                  <Button className="bg-blue-600 text-white hover:bg-blue-700">
+                    Создать первый сертификат
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {certificates.map((certificate) => (
+                  <CertificateCard
+                    key={certificate.id}
+                    certificate={certificate}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
