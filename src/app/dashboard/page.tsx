@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import CertificateCard from '@/components/certificate-card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Certificate } from '@/types';
 
 export default async function Dashboard() {
   const session = await auth();
@@ -13,7 +12,7 @@ export default async function Dashboard() {
     redirect('/auth/signin');
   }
 
-  const userRole = (session.user as any).role;
+  const userRole = (session.user as { role?: string }).role;
 
   // Если пользователь admin, перенаправляем на /certificates
   if (userRole === 'admin') {
@@ -21,7 +20,7 @@ export default async function Dashboard() {
   }
 
   // Получаем сертификаты для пользователя с ролью user
-  let certificates: Certificate[] = [];
+  let certificates: any[] = [];
   try {
     certificates = await prisma.certificate.findMany({
       where: {

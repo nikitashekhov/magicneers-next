@@ -1,7 +1,7 @@
 'use server';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { removeFromS3, uploadToS3 } from '@/lib/aws'
+import { removeFromS3 } from '@/lib/aws'
 import { auth } from '@/auth';
 import { deleteFileFromDB } from '@/lib/db';
 

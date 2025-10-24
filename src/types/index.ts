@@ -134,7 +134,7 @@ export interface Certificate {
   materialColor: string;
   fixationType: string;
   fixationColor: string;
-  dentalFormula: any;
+  dentalFormula: { top: { right: boolean[]; left: boolean[] }; bottom: { right: boolean[]; left: boolean[] } } | null;
   createdAt: Date;
   updatedAt: Date;
 }

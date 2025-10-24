@@ -1,7 +1,7 @@
 'use server';
 
 import { NextRequest, NextResponse } from 'next/server';
-import { removeFromS3, uploadToS3 } from '@/lib/aws'
+import { uploadToS3 } from '@/lib/aws'
 import { auth } from '@/auth';
 import path from 'node:path';
 import { insertFileInDB } from '@/lib/db';

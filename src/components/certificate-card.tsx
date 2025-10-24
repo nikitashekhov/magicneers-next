@@ -37,7 +37,7 @@ interface Certificate {
   materialColor: string;
   fixationType: string;
   fixationColor: string;
-  dentalFormula: any;
+  dentalFormula: { top: { right: boolean[]; left: boolean[] }; bottom: { right: boolean[]; left: boolean[] } } | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -49,7 +49,7 @@ interface CertificateCardProps {
 export default function CertificateCard({ certificate }: CertificateCardProps) {
   const [showPrivateInfo, setShowPrivateInfo] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('ru-RU', {
@@ -289,7 +289,7 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
               Скачать копию
             </a>
           </div>
-          {session && ((session.user as any).role === 'admin') && <a
+          {session && ((session.user as { role?: string }).role === 'admin') && <a
             href={`/certificates/edit/${certificate.id}`}
             className="w-full bg-orange-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-orange-600 transition-colors block"
           >

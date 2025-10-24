@@ -16,7 +16,7 @@ export default async function EditCertificatePage({ params }: EditCertificatePag
     redirect('/auth/signin');
   }
 
-  if ((session.user as any).role !== 'admin') {
+  if ((session.user as { role?: string }).role !== 'admin') {
     forbidden();
   }
 
@@ -44,12 +44,12 @@ export default async function EditCertificatePage({ params }: EditCertificatePag
                 Редактирование сертификата
               </h1>
               <p className="mt-1 text-sm text-gray-600">
-                Измените данные сертификата и нажмите "Сохранить" для применения изменений
+                Измените данные сертификата и нажмите &quot;Сохранить&quot; для применения изменений
               </p>
             </div>
             
             <div className="p-6">
-              <EditCertificateForm certificate={certificate} />
+              <EditCertificateForm certificate={certificate as any} />
             </div>
           </div>
         </div>

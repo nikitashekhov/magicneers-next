@@ -130,7 +130,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id
         token.email = user.email || null
         token.name = user.name || null
-        token.role = (user as any).role
+        token.role = (user as { role?: string }).role
       }
       return token
     },
@@ -139,7 +139,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = token.id as string
         session.user.email = token.email as string
         session.user.name = token.name as string
-        ;(session.user as any).role = token.role as string
+        ;(session.user as { role?: string }).role = token.role as string
       }
       return session
     },

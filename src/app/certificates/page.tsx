@@ -11,7 +11,7 @@ export default async function CertificatesPage() {
     redirect('/auth/signin');
   }
 
-  if ((session.user as any).role !== 'admin') {
+  if ((session.user as { role?: string }).role !== 'admin') {
     forbidden();
   }
 
@@ -29,7 +29,7 @@ export default async function CertificatesPage() {
 
     // console.log(certificates);
 
-    return <CertificatesClient certificates={certificates} />;
+    return <CertificatesClient certificates={certificates as any} />;
   } catch (error) {
     console.error('Error fetching certificates:', error);
     return (

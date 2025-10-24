@@ -3,13 +3,6 @@ import { Certificate } from "@/types/index";
 
 export default function CertificateCardPublic({ certificate }: { certificate: Certificate }) {
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('ru-RU', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   return (
     <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-200">

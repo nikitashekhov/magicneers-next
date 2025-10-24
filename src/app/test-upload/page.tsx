@@ -9,7 +9,7 @@ export default function TestUploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{ status: number | string; data: unknown } | null>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [folder, setFolder] = useState<string>('foto');
 
@@ -25,7 +25,7 @@ export default function TestUploadPage() {
   // Check authentication and admin role in useEffect
   useEffect(() => {
     if (status === 'loading') return;
-    if (status === 'unauthenticated' || !session || !session.user || !session.user.id || (session.user as any).role !== 'admin') {
+    if (status === 'unauthenticated' || !session || !session.user || !session.user.id || (session.user as { role?: string }).role !== 'admin') {
       forbidden();
     }
   }, [session, status]);
@@ -97,16 +97,6 @@ export default function TestUploadPage() {
     }
   };
 
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-          <p className="mt-4">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (status === 'unauthenticated') {
     return (
@@ -221,9 +211,9 @@ export default function TestUploadPage() {
             <h3 className="font-semibold mb-2">Test Instructions:</h3>
             <ol className="list-decimal list-inside space-y-1">
               <li>Select a file using the file input above</li>
-              <li>Click "Upload to S3" to test the endpoint</li>
+              <li>Click &quot;Upload to S3&quot; to test the endpoint</li>
               <li>Check the result below for success/failure details</li>
-              <li>If successful, you'll get a signed S3 URL</li>
+              <li>If successful, you&apos;ll get a signed S3 URL</li>
             </ol>
           </div>
         </div>

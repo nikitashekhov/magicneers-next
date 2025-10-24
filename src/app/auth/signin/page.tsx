@@ -17,13 +17,13 @@ export default function SignIn() {
   
   useEffect(() => {
     if (status === "authenticated") {
-      if ((session?.user as any).role === "admin") {
+      if ((session?.user as { role?: string }).role === "admin") {
         router.push("/certificates")
       } else {
         router.push("/dashboard")
       }
     }
-  }, [status, router])
+  }, [status, session, router])
 
   const handleEmailSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault()

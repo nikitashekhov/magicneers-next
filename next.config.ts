@@ -3,13 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Enable experimental features for modern development
   experimental: {
-    typedRoutes: true, // Enable statically typed links
     typedEnv: true, // Enable typed environment variables
     authInterrupts: true,
   },
   
-  // Performance optimizations
-  swcMinify: true,
+  // Enable typed routes (moved from experimental)
+  typedRoutes: true,
   
   // Image optimization
   images: {

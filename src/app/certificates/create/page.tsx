@@ -1,9 +1,9 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 
-export default function TestCertificatePage() {
+function TestCertificateContent() {
   const [formData, setFormData] = useState({
     title: 'Magicneers #1',
     installationDate: new Date().toISOString().split('T')[0],
@@ -45,15 +45,15 @@ export default function TestCertificatePage() {
   const [smilePhoto, setSmilePhoto] = useState<File | null>(null);
   const [digitalCopy, setDigitalCopy] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{ success: boolean; error?: string; certificateId?: string } | null>(null);
   const searchParams = useSearchParams();
   
   useEffect(() => {
     const lastIndex = parseInt(searchParams.get('lastIndex') || '0');
-    setFormData({
-      ...formData,
+    setFormData(prevFormData => ({
+      ...prevFormData,
       title: `Magicneers #${lastIndex + 1}`
-    });
+    }));
   }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -92,7 +92,7 @@ export default function TestCertificatePage() {
 
       const data = await response.json();
       setResult(data);
-    } catch (error) {
+    } catch {
       setResult({ success: false, error: 'Network error' });
     } finally {
       setLoading(false);
@@ -547,5 +547,23 @@ export default function TestCertificatePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function TestCertificatePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white shadow rounded-lg">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h1 className="text-2xl font-bold mb-6 text-gray-900">Загрузка...</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <TestCertificateContent />
+    </Suspense>
   );
 }
