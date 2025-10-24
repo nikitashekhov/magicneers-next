@@ -5,6 +5,7 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { uploadToS3 } from '@/lib/aws';
 import path from 'node:path';
+import { revalidatePath } from 'next/cache';
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -168,6 +169,8 @@ export async function POST(request: NextRequest) {
         digitalCopy: true
       }
     });
+
+    revalidatePath('/');
 
     return NextResponse.json({ 
       success: true, 
