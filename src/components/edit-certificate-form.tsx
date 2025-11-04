@@ -122,9 +122,7 @@ export default function EditCertificateForm({ certificate }: EditCertificateForm
 
       if (data.success) {
         setSuccess(true);
-        setTimeout(() => {
-          router.push('/certificates');
-        }, 2000);
+        router.push('/certificates');
       } else {
         setError(data.error || 'Произошла ошибка при обновлении сертификата');
       }

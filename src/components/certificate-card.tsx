@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Certificate } from '@/types/index';
 
 interface CertificateCardProps {
@@ -13,6 +14,7 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
   const [showPrivateInfo, setShowPrivateInfo] = useState(false);
   const [imageError, setImageError] = useState(false);
   const { data: session } = useSession();
+  const router = useRouter();
 
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('ru-RU', {
@@ -28,6 +30,21 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const handleDeleteCertificate = async (certificateId: string) => {
+    const confirmed = window.confirm('Удалить сертификат?');
+    if (!confirmed) {
+      return;
+    }
+
+    const response = await fetch(`/api/certificate/delete/${certificateId}`, {
+      method: 'DELETE',
+    });
+    const data = await response.json();
+    if (data.success) {
+      router.push('/certificates');
+    }
   };
 
   return (
@@ -252,16 +269,20 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
               Скачать архив
             </a>
           </div>
-          <div className="flex space-x-2">
-            {session && ((session.user as { role?: string }).role === 'admin') && <a
+          {session && ((session.user as { role?: string }).role === 'admin') && <div className="flex space-x-2">
+            <a
               href={`/certificates/edit/${certificate.id}`}
               className="w-full bg-orange-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-orange-600 transition-colors block"
             >
               Редактировать
             </a>
-            }
-            
-          </div>
+            <button
+              onClick={() => handleDeleteCertificate(certificate.id)}
+              className="w-full bg-red-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-red-600 transition-colors"
+            >
+              Удалить
+            </button>
+          </div>}
         </div>
       </div>
     </div>
