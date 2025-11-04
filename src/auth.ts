@@ -3,7 +3,7 @@ import EmailProvider from "next-auth/providers/email"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import nodemailer from "nodemailer"
-import { generateOTP, verifyOTP } from "@/lib/otp-verification"
+import { generateOTP, verifyOTP, RateLimitError } from "@/lib/otp-verification"
 import { prisma } from "@/lib/prisma"
 
 // Create nodemailer transporter
@@ -34,31 +34,44 @@ const customEmailProvider = EmailProvider({
   async sendVerificationRequest(params) {
     const { identifier: email, url } = params
     
-    // Generate and store OTP
-    const otp = await generateOTP(email)
+    try {
+      // Generate and store OTP (with rate limiting)
+      const otp = await generateOTP(email)
 
-    // Send OTP email with magic link
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM!,
-      to: email,
-      subject: `Ваш код подтверждения для ${process.env.NEXTAUTH_URL}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">Ваш код подтверждения</h2>
-          <p>Используйте следующий код для входа в систему:</p>
-          <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
-            <h1 style="font-size: 32px; letter-spacing: 5px; color: #333; margin: 0;">${otp}</h1>
+      // Send OTP email with magic link
+      await transporter.sendMail({
+        from: process.env.EMAIL_FROM!,
+        to: email,
+        subject: `Ваш код подтверждения для сертификатов Magicneers`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <img src="${process.env.NEXT_PUBLIC_APP_URL}/images/magicneers.png" alt="Logo" style="width: 140px; height: 24px; margin-bottom: 20px;">
+            <h2 style="color: #333;">Ваш код подтверждения</h2>
+            <p>Используйте следующий код для входа в систему:</p>
+            <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
+              <h1 style="font-size: 32px; letter-spacing: 5px; color: #333; margin: 0;">${otp}</h1>
+            </div>
+            <p style="color: #666; font-size: 14px;">
+              Этот код действителен в течение 10 минут. Если вы не запрашивали этот код, проигнорируйте это письмо.
+            </p>
+            <p style="color: #666; font-size: 12px; margin-top: 20px;">
+              Или нажмите на эту ссылку для входа: <a href="${url}">${url}</a>
+            </p>
           </div>
-          <p style="color: #666; font-size: 14px;">
-            Этот код действителен в течение 10 минут. Если вы не запрашивали этот код, проигнорируйте это письмо.
-          </p>
-          <p style="color: #666; font-size: 12px; margin-top: 20px;">
-            Или нажмите на эту ссылку для входа: <a href="${url}">${url}</a>
-          </p>
-        </div>
-      `,
-      text: `Ваш код подтверждения: ${otp}\n\nЭтот код действителен в течение 10 минут.\n\nИли нажмите на эту ссылку для входа: ${url}`,
-    })
+        `,
+        text: `Ваш код подтверждения: ${otp}\n\nЭтот код действителен в течение 10 минут.\n\nИли нажмите на эту ссылку для входа: ${url}`,
+      })
+    } catch (error) {
+      // Handle rate limiting errors
+      if (error instanceof RateLimitError) {
+        const resetTime = new Date(error.resetAt).toLocaleString("ru-RU")
+        throw new Error(
+          `Слишком много запросов кода. Попробуйте снова после ${resetTime}. Осталось попыток: ${error.remaining}`
+        )
+      }
+      // Re-throw other errors
+      throw error
+    }
   },
 })
 
@@ -78,31 +91,43 @@ const otpProvider = CredentialsProvider({
     const email = credentials.email as string
     const otp = credentials.otp as string
 
-    // Verify the OTP
-    const isValid = await verifyOTP(email, otp)
-    if (!isValid) {
-      return null
-    }
+    try {
+      // Verify the OTP (with rate limiting)
+      const isValid = await verifyOTP(email, otp)
+      if (!isValid) {
+        return null
+      }
 
-    // Find or create user
-    let user = await prisma.user.findUnique({
-      where: { email },
-    })
-
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email,
-          name: email.split('@')[0] || null,
-        },
+      // Find or create user
+      let user = await prisma.user.findUnique({
+        where: { email },
       })
-    }
 
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            email,
+            name: email.split('@')[0] || null,
+          },
+        })
+      }
+
+      return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      }
+    } catch (error) {
+      // Handle rate limiting errors
+      if (error instanceof RateLimitError) {
+        // Return null to indicate authentication failure
+        // The error will be logged but not exposed to client for security
+        console.error("Rate limit exceeded for OTP verification:", email)
+        return null
+      }
+      // Re-throw other errors
+      throw error
     }
   },
 })
