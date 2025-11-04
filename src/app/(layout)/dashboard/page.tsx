@@ -52,13 +52,8 @@ export default async function Dashboard() {
             Сертификаты не найдены
           </h3>
           <p className="text-gray-600 mb-6">
-            У вас пока нет созданных сертификатов.
+            У вас пока нет сертификатов.
           </p>
-          <Link href="/certificates/create">
-            <Button className="bg-blue-600 text-white hover:bg-blue-700">
-              Создать первый сертификат
-            </Button>
-          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6">

@@ -1,5 +1,6 @@
 'use client';
 
+import { useSession } from 'next-auth/react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 
@@ -56,6 +57,15 @@ function TestCertificateContent() {
       title: `Magicneers #${lastIndex + 1}`
     }));
   }, [searchParams]);
+
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session?.user && (session.user as { role?: string }).role !== 'admin') {
+      router.push('/dashboard');
+    }
+  }, [session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

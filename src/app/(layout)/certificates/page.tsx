@@ -12,7 +12,7 @@ export default async function CertificatesPage() {
   }
 
   if ((session.user as { role?: string }).role !== 'admin') {
-    forbidden();
+    redirect('/dashboard');
   }
 
   try {
