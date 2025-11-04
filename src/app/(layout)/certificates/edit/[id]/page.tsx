@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect, notFound, forbidden } from 'next/navigation';
-import EditCertificateForm from '../../../../components/edit-certificate-form';
+import EditCertificateForm from '@/components/edit-certificate-form';
 
 interface EditCertificatePageProps {
   params: {

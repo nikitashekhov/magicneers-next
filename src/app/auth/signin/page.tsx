@@ -5,6 +5,7 @@ import { signIn, useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export default function SignIn() {
   const [email, setEmail] = useState("")
@@ -84,10 +85,18 @@ export default function SignIn() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            <h1 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+                <Link href="/">
+                    <img src="/images/magicneers.svg" alt="Magicneers" width={140} height={24} />
+                </Link> 
+                <span className="font-bold text-gray-900 font-playfair-display">Сертификаты</span>
+            </h1>
+        </div>
+        <div>
+          <h2 className="mt-6 text-xl font-extrabold text-gray-900">
             {step === "email" ? "Войдите в свой аккаунт" : "Введите код подтверждения"}
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-600">
             {step === "email"
               ? "Введите ваш email адрес для получения кода подтверждения"
               : `Мы отправили 6-значный код на ${email}`}
@@ -95,7 +104,7 @@ export default function SignIn() {
         </div>
 
         <form
-          className="mt-8 space-y-6"
+          className="mt-2 space-y-6"
           onSubmit={step === "email" ? handleEmailSubmit : handleOtpSubmit}
         >
           <div className="space-y-4">

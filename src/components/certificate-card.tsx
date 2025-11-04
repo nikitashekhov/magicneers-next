@@ -3,44 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-
-interface File {
-  id: string;
-  name: string;
-  type: string;
-  size: string;
-  link: string;
-}
-
-interface User {
-  id: string;
-  name: string | null;
-  email: string;
-  firstName: string | null;
-  lastName: string | null;
-}
-
-interface Certificate {
-  id: string;
-  title: string;
-  installationDate: Date;
-  user: User;
-  smilePhoto: File;
-  digitalCopy: File;
-  doctorFirstName: string;
-  doctorLastName: string;
-  clinicName: string;
-  clinicCity: string;
-  technicianFirstName: string;
-  technicianLastName: string;
-  materialType: string;
-  materialColor: string;
-  fixationType: string;
-  fixationColor: string;
-  dentalFormula: { top: { right: boolean[]; left: boolean[] }; bottom: { right: boolean[]; left: boolean[] } } | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Certificate } from '@/types/index';
 
 interface CertificateCardProps {
   certificate: Certificate;
@@ -278,7 +241,7 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
               rel="noopener noreferrer"
               className="flex-1 bg-blue-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-blue-600 transition-colors"
             >
-              Просмотр фото
+              Скачать фото
             </a>
             <a
               href={certificate.digitalCopy.link}
@@ -286,16 +249,19 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
               rel="noopener noreferrer"
               className="flex-1 bg-green-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-green-600 transition-colors"
             >
-              Скачать копию
+              Скачать архив
             </a>
           </div>
-          {session && ((session.user as { role?: string }).role === 'admin') && <a
-            href={`/certificates/edit/${certificate.id}`}
-            className="w-full bg-orange-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-orange-600 transition-colors block"
-          >
-            Редактировать
-          </a>
-          }
+          <div className="flex space-x-2">
+            {session && ((session.user as { role?: string }).role === 'admin') && <a
+              href={`/certificates/edit/${certificate.id}`}
+              className="w-full bg-orange-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-orange-600 transition-colors block"
+            >
+              Редактировать
+            </a>
+            }
+            
+          </div>
         </div>
       </div>
     </div>
