@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from "next/image";
 import { Certificate } from "@/types/index";
+import { Share } from 'lucide-react';
 
 export default function CertificateCardPublic({ certificate }: { certificate: Certificate }) {
   const [showShareModal, setShowShareModal] = useState(false);
@@ -29,6 +30,12 @@ export default function CertificateCardPublic({ certificate }: { certificate: Ce
 
   return (
     <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-200">
+      <div className="p-4 flex items-center gap-2 justify-between">
+        <Image src="/images/magicneers.svg" alt="Magicneers" width={140} height={24} />
+        <h3 className="text-lg font-semibold text-gray-900">
+          {certificate.title.split(' ')[1]}
+        </h3>
+      </div>
       {/* Заголовок и изображение */}
       <div className="relative">
         <div className="h-48 bg-gray-100 flex items-center justify-center">
@@ -53,30 +60,33 @@ export default function CertificateCardPublic({ certificate }: { certificate: Ce
 
       {/* Основная информация */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          {certificate.title}
-        </h3>
         
         <div className="space-y-2 text-sm text-gray-600 mb-4">
           <div className="flex items-center">
             <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
             </svg>
-            <span>Доктор: {certificate.doctorFirstName} {certificate.doctorLastName}</span>
+            <div className='flex gap-1'>
+              <span className='font-bold text-gray-700'>Доктор:</span>
+              <span>{certificate.doctorFirstName} {certificate.doctorLastName}</span>
+            </div>
           </div>
           
           <div className="flex items-center">
             <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
             </svg>
-            <span>{certificate.clinicName}, {certificate.clinicCity}</span>
+            <div className='flex gap-1'>
+              <span className='font-bold text-gray-700'>Клиника:</span>
+              <span>{certificate.clinicName}, {certificate.clinicCity}</span>
+            </div>
           </div>
         </div>
 
         {/* Описание сертификата */}
         <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-          <h4 className="text-sm font-semibold text-blue-900 mb-1">Цифровой сертификат Magicneers</h4>
-          <p className="text-xs text-blue-700">Сертификат подтверждает подлинность виниров Magicneers.</p>
+          <h4 className="text-lg font-semibold text-gray-700 mb-1 font-playfair-display">Цифровой сертификат Magicneers</h4>
+          <p className="text-xs text-gray-700">Сертификат подтверждает подлинность виниров Magicneers и содержит электронный архив данных.</p>
         </div>
 
         {/* Кнопки действий */}
@@ -84,12 +94,9 @@ export default function CertificateCardPublic({ certificate }: { certificate: Ce
           <div className="flex space-x-2">
             <button 
               onClick={() => setShowShareModal(true)}
-              className="flex-1 bg-green-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-green-600 transition-colors flex items-center justify-center"
+              className="flex-1 bg-[#1EB7D9] text-white text-center py-3 px-4 rounded text-sm hover:bg-[#18CCF4] transition-colors flex items-center justify-center cursor-pointer"
             >
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-              </svg>
-              Поделиться
+              <Share className="w-4 h-4 mr-2" /> Поделиться
             </button>
           </div>
         </div>
@@ -111,12 +118,12 @@ export default function CertificateCardPublic({ certificate }: { certificate: Ce
             </h2>
             
             {/* Описательный текст */}
-            <p className="text-gray-600 text-sm mb-6">
+            <p className="text-gray-600 text-sm mb-4">
               Поделитесь ссылкой на Цифровой сертификат Magicneers
             </p>
 
             {/* Поле с ссылкой */}
-            <div className="mb-6">
+            <div className="mb-4">
               {/* <label className="block text-sm text-gray-600 mb-2">Ссылка на сертификат</label> */}
               <div className="flex items-center border border-gray-300 rounded">
                 <input
@@ -127,7 +134,7 @@ export default function CertificateCardPublic({ certificate }: { certificate: Ce
                 />
                 <button
                   onClick={handleCopyLink}
-                  className="p-2 hover:bg-gray-100 transition-colors"
+                  className="p-2 hover:bg-gray-100 transition-colors cursor-pointer"
                   title={copied ? 'Скопировано!' : 'Копировать ссылку'}
                 >
                   {copied ? (
@@ -146,7 +153,7 @@ export default function CertificateCardPublic({ certificate }: { certificate: Ce
             {/* Кнопка Show certificate */}
             <button
               onClick={handleShowCertificate}
-              className="w-full bg-blue-500 text-white py-3 px-4 rounded text-sm font-medium hover:bg-blue-600 transition-colors"
+              className="w-full bg-[#1EB7D9] text-white py-3 px-4 rounded text-sm font-medium hover:bg-[#18CCF4] transition-colors cursor-pointer"
             >
               Посмотреть сертификат
             </button>

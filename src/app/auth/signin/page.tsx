@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
 
 export default function SignIn() {
   const [email, setEmail] = useState("")
@@ -83,13 +84,13 @@ export default function SignIn() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+      <div className="max-w-md w-full space-y-4">
         <div>
             <h1 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
                 <Link href="/">
                     <img src="/images/magicneers.svg" alt="Magicneers" width={140} height={24} />
                 </Link> 
-                <span className="font-bold text-gray-900 font-playfair-display">Сертификаты</span>
+                {/* <span className="font-bold text-gray-900 font-playfair-display">Сертификаты</span> */}
             </h1>
         </div>
         <div>
@@ -104,10 +105,10 @@ export default function SignIn() {
         </div>
 
         <form
-          className="mt-2 space-y-6"
+          className="space-y-4"
           onSubmit={step === "email" ? handleEmailSubmit : handleOtpSubmit}
         >
-          <div className="space-y-4">
+          <div className="">
             {step === "email" ? (
               <div>
                 <label htmlFor="email" className="sr-only">
@@ -134,6 +135,7 @@ export default function SignIn() {
                   id="otp"
                   name="otp"
                   type="text"
+                  inputMode="numeric"
                   autoComplete="one-time-code"
                   required
                   className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm text-center text-2xl tracking-widest"
@@ -154,7 +156,7 @@ export default function SignIn() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#1EB7D9] hover:bg-[#18CCF4] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 cursor-pointer"
             >
               {isLoading ? "Обработка..." : step === "email" ? "Отправить код" : "Подтвердить код"}
             </Button>
@@ -164,14 +166,14 @@ export default function SignIn() {
                 type="button"
                 variant="outline"
                 onClick={handleBackToEmail}
-                className="w-full text-black"
+                className="w-full text-black cursor-pointer"
               >
-                Назад к Email
+                <ArrowLeft className="w-4 h-4 mr-2" /> Назад к вводу почты
               </Button>
             )}
           </div>
 
-          {step === "otp" && (
+          {/* {step === "otp" && (
             <div className="text-center">
               <button
                 type="button"
@@ -179,12 +181,12 @@ export default function SignIn() {
                   setStep("email")
                   handleEmailSubmit()
                 }}
-                className="text-sm text-indigo-600 hover:text-indigo-500"
+                className="text-sm text-indigo-600 hover:text-indigo-500 cursor-pointer"
               >
                 Отправить код повторно
               </button>
             </div>
-          )}
+          )} */}
         </form>
       </div>
     </div>

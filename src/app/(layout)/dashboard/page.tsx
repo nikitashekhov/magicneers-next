@@ -41,9 +41,9 @@ export default async function Dashboard() {
 
   return (
     <div className="mx-auto w-full md:w-1/2">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          Ваши сертификаты
-        </h2>
+        {/* <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          Ваш цифровой сертификат Magicneers
+        </h2> */}
             
       {certificates.length === 0 ? (
         <div className="text-center py-12">

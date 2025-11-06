@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Certificate } from '@/types/index';
+import { Download, Pencil, Trash } from 'lucide-react';
 
 interface CertificateCardProps {
   certificate: Certificate;
 }
 
 export default function CertificateCard({ certificate }: CertificateCardProps) {
-  const [showPrivateInfo, setShowPrivateInfo] = useState(false);
+  const [showPrivateInfo, setShowPrivateInfo] = useState(true);
   const [imageError, setImageError] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
@@ -49,7 +50,6 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-200">
-      {/* Заголовок и изображение */}
       <div className="relative">
         <div className="h-48 bg-gray-100 flex items-center justify-center">
           {!imageError && certificate.smilePhoto?.link ? (
@@ -71,104 +71,97 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
           )}
         </div>
         <div className="absolute top-2 right-2">
-          <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
-            {formatDate(certificate.createdAt)}
+          <span className="bg-[#1EB7D9] text-white text-xs px-2 py-1 rounded-full">
+            {formatInstallationDate(certificate.installationDate)}
           </span>
         </div>
       </div>
 
       {/* Основная информация */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          {certificate.title}
+        <h3 className="text-2xl font-semibold text-gray-900 mb-2 font-playfair-display">
+          {certificate.user.firstName} {certificate.user.lastName} 
         </h3>
         
         <div className="space-y-2 text-sm text-gray-600">
           <div className="flex items-center">
-            <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-            </svg>
-            <span>Пациент: {certificate.user.firstName} {certificate.user.lastName}</span>
+            <div className='flex gap-1'>
+              <span className='font-bold text-gray-700'>Почта пациента:</span>
+              <span>{certificate.user.email}</span>
+            </div>
           </div>
           
           <div className="flex items-center">
-            <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" clipRule="evenodd" />
-            </svg>
-            <span>{certificate.user.email}</span>
+            <div className='flex gap-1'>
+              <span className='font-bold text-gray-700'>Доктор:</span>
+              <span>{certificate.doctorFirstName} {certificate.doctorLastName}</span>
+            </div>
           </div>
           
           <div className="flex items-center">
-            <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-            </svg>
-            <span>Доктор: {certificate.doctorFirstName} {certificate.doctorLastName}</span>
+            <div className='flex gap-1'>
+              <span className='font-bold text-gray-700'>Клиника:</span>
+              <span>{certificate.clinicName}, {certificate.clinicCity}</span>
+            </div>
           </div>
           
           <div className="flex items-center">
-            <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-            </svg>
-            <span>{certificate.clinicName}, {certificate.clinicCity}</span>
-          </div>
-          
-          <div className="flex items-center">
-            <svg className="w-4 h-4 mr-2 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-            </svg>
-            <span>Установка: {formatInstallationDate(certificate.installationDate)}</span>
+            <div className='flex gap-1'>
+              <span className='font-bold text-gray-700'>Установка:</span>
+              <span>{formatInstallationDate(certificate.installationDate)}</span>
+            </div>
           </div>
         </div>
 
         {/* Кнопка для показа приватной информации */}
-        <button
+        {/* <button
           onClick={() => setShowPrivateInfo(!showPrivateInfo)}
           className="mt-3 w-full text-sm text-blue-600 hover:text-blue-800 font-medium"
         >
           {showPrivateInfo ? 'Скрыть детали' : 'Показать детали'}
-        </button>
+        </button> */}
 
         {/* Приватная информация */}
         {showPrivateInfo && (
           <div className="mt-4 pt-4 border-t border-gray-200 space-y-4 text-sm">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-6">
               <div>
-                <span className="font-medium text-gray-700">Техник:</span>
+                <span className="font-bold text-gray-700">Техник:</span>
                 <p className="text-gray-600">{certificate.technicianFirstName} {certificate.technicianLastName}</p>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Материал:</span>
+                <span className="font-bold text-gray-700">Материал виниров:</span>
                 <p className="text-gray-600">{certificate.materialType} ({certificate.materialColor})</p>
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-6">
               <div>
-                <span className="font-medium text-gray-700">Фиксация:</span>
+                <span className="font-bold text-gray-700">Материал фиксации:</span>
                 <p className="text-gray-600">{certificate.fixationType} ({certificate.fixationColor})</p>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Размер файлов:</span>
+                <span className="font-bold text-gray-700">Размер файлов:</span>
                 <p className="text-gray-600">
-                  Фото: {(parseInt(certificate.smilePhoto.size) / 1024 / 1024).toFixed(1)} MB<br />
-                  Копия: {(parseInt(certificate.digitalCopy.size) / 1024 / 1024).toFixed(1)} MB
+                {session && ((session.user as { role?: string }).role === 'admin') && <>Фото: {(parseInt(certificate.smilePhoto.size) / 1024 / 1024).toFixed(1)} MB<br /></>}
+                  Архив: {(parseInt(certificate.digitalCopy.size) / 1024 / 1024).toFixed(1)} MB
                 </p>
               </div>
             </div>
 
             {/* Зубная формула */}
             <div>
-              <span className="font-medium text-gray-700 block mb-2">Зубная формула:</span>
-              <div className="bg-gray-50 p-3 rounded-lg">
+              <span className="font-bold text-gray-700 block mb-2">Зубная формула:</span>
+              <div className="">
                 <div className="overflow-auto flex flex-col text-xs">
-                  <div className="flex gap-1">
-                    <div className="self-center font-bold text-xs">
-                      Прав
-                    </div>
+                  <div className="flex gap-1 items-center">
+                    {session && ((session.user as { role?: string }).role === 'user') && <div className="font-bold text-xs text-gray-700">
+                      Правая сторона
+                    </div>}
                     <div className="flex flex-col gap-1">
-                      <div className="text-center font-bold text-xs">
+                    {session && ((session.user as { role?: string }).role === 'user') && <div className="text-center font-bold text-xs text-gray-700">
                         Верхняя челюсть
-                      </div>
+                      </div>}
                       <div>
                         <div className="flex">
                           {/* Top Right Teeth (18-11) */}
@@ -177,8 +170,8 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
                               const isSelected = certificate.dentalFormula?.top?.right?.[7-index] || false;
                               return (
                                 <div key={`top-right-${index}`} className="w-6 h-6 flex items-center justify-center">
-                                  <div className={`w-4 h-4 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
-                                    isSelected ? 'bg-blue-500 text-white' : 'bg-white'
+                                  <div className={`w-6 h-6 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
+                                    isSelected ? 'bg-[#1EB7D9] text-white' : 'bg-white text-gray-600'
                                   }`}>
                                     {toothNumber}
                                   </div>
@@ -192,8 +185,8 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
                               const isSelected = certificate.dentalFormula?.top?.left?.[index] || false;
                               return (
                                 <div key={`top-left-${index}`} className="w-6 h-6 flex items-center justify-center">
-                                  <div className={`w-4 h-4 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
-                                    isSelected ? 'bg-blue-500 text-white' : 'bg-white'
+                                  <div className={`w-6 h-6 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
+                                    isSelected ? 'bg-[#1EB7D9] text-white' : 'bg-white text-gray-600'
                                   }`}>
                                     {toothNumber}
                                   </div>
@@ -209,8 +202,8 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
                               const isSelected = certificate.dentalFormula?.bottom?.right?.[7-index] || false;
                               return (
                                 <div key={`bottom-right-${index}`} className="w-6 h-6 flex items-center justify-center">
-                                  <div className={`w-4 h-4 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
-                                    isSelected ? 'bg-blue-500 text-white' : 'bg-white'
+                                  <div className={`w-6 h-6 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
+                                    isSelected ? 'bg-[#1EB7D9] text-white' : 'bg-white text-gray-600'
                                   }`}>
                                     {toothNumber}
                                   </div>
@@ -224,8 +217,8 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
                               const isSelected = certificate.dentalFormula?.bottom?.left?.[index] || false;
                               return (
                                 <div key={`bottom-left-${index}`} className="w-6 h-6 flex items-center justify-center">
-                                  <div className={`w-4 h-4 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
-                                    isSelected ? 'bg-blue-500 text-white' : 'bg-white'
+                                  <div className={`w-6 h-6 border border-gray-300 rounded text-center text-xs flex items-center justify-center ${
+                                    isSelected ? 'bg-[#1EB7D9] text-white' : 'bg-white text-gray-600'
                                   }`}>
                                     {toothNumber}
                                   </div>
@@ -235,13 +228,13 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
                           </div>
                         </div>
                       </div>
-                      <div className="text-center font-bold text-xs">
+                      {session && ((session.user as { role?: string }).role === 'user') && <div className="text-center font-bold text-xs text-gray-700">
                         Нижняя челюсть
-                      </div>
+                      </div>}
                     </div>
-                    <div className="self-center font-bold text-xs">
-                      Лев
-                    </div>
+                    {session && ((session.user as { role?: string }).role === 'user') && <div className="self-center font-bold text-xs text-gray-700">
+                      Левая сторона
+                    </div>}
                   </div>
                 </div>
               </div>
@@ -252,35 +245,35 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
         {/* Кнопки действий */}
         <div className="mt-4 space-y-2">
           <div className="flex space-x-2">
-            <a
+            {/* <a
               href={certificate.smilePhoto.link}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 bg-blue-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-blue-600 transition-colors"
             >
               Скачать фото
-            </a>
+            </a> */}
             <a
               href={certificate.digitalCopy.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-green-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-green-600 transition-colors"
+              className="flex-1 bg-green-500 text-white text-center py-3 px-4 rounded text-sm hover:bg-green-600 transition-colors flex items-center justify-center"
             >
-              Скачать архив
+              <Download className="w-4 h-4 mr-2" /> Скачать архив
             </a>
           </div>
           {session && ((session.user as { role?: string }).role === 'admin') && <div className="flex space-x-2">
             <a
               href={`/certificates/edit/${certificate.id}`}
-              className="w-full bg-orange-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-orange-600 transition-colors block"
+              className="w-full border border-orange-500 text-orange-500 text-center py-3 px-4 rounded text-sm hover:bg-orange-600 hover:text-white transition-colors flex items-center justify-center"
             >
-              Редактировать
+              <Pencil className="w-4 h-4 mr-2" /> Редактировать
             </a>
             <button
               onClick={() => handleDeleteCertificate(certificate.id)}
-              className="w-full bg-red-500 text-white text-center py-2 px-3 rounded text-sm hover:bg-red-600 transition-colors"
+              className="w-full border border-red-500 text-red-500 text-center py-3 px-4 rounded text-sm hover:bg-red-500 hover:text-white transition-colors cursor-pointer flex items-center justify-center"
             >
-              Удалить
+              <Trash className="w-4 h-4 mr-2" /> Удалить
             </button>
           </div>}
         </div>

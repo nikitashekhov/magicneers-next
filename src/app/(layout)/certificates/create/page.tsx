@@ -273,7 +273,7 @@ function TestCertificateContent() {
                   type="text"
                   value={formData.clinicName}
                   onChange={(e) => setFormData({...formData, clinicName: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-black cursor-not-allowed"
                   required
                   disabled={true}
                 />
@@ -537,11 +537,11 @@ function TestCertificateContent() {
           </div>
 
           {/* Кнопки действий */}
-          <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+          <div className="flex justify-start space-x-3 pt-6 border-t border-gray-200">
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#1EB7D9] hover:bg-[#18CCF4] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? 'Создание сертификата...' : 'Создать сертификат'}
             </button>

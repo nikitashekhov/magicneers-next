@@ -16,19 +16,19 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://verify.magicneers.com'),
   title: {
-    default: "Сертификаты Magicneers",
-    template: "%s | Сертификаты Magicneers"
+    default: "Цифровые сертификаты Magicneers",
+    template: "%s | Цифровые сертификаты Magicneers"
   },
-  description: "Сертификаты Magicneers",
-  keywords: ["сертификаты", "Magicneers", "AestheticA"],
+  description: `Цифровые сертификаты сверхтонких керамических виниров ручной работы без препарирования зубов`,
+  keywords: ["сертификаты", "Magicneers", "AestheticA", "виниры"],
   openGraph: {
-    title: "Сертификаты Magicneers",
-    description: "Сертификаты Magicneers",
+    title: "Цифровые сертификаты Magicneers",
+    description: `Цифровые сертификаты сверхтонких керамических виниров ручной работы без препарирования зубов`,
     url: 'https://verify.magicneers.com',
     siteName: 'Magicneers',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/images/og-image.jpg',
         width: 1200,
         height: 630,
       }

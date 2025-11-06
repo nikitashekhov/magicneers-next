@@ -49,7 +49,7 @@ export default function CertificatesAdminList({ certificates }: CertificatesAdmi
               href={`/certificates/create?${new URLSearchParams({
                 lastIndex: certificates.length.toString()
               }).toString()}`}
-              className="w-full px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 inline-flex items-center justify-center"
+              className="w-full px-3 py-2 bg-[#1EB7D9] text-white rounded-md hover:bg-[#18CCF4] transition-colors duration-200 inline-flex items-center justify-center"
             >
               Создать сертификат
             </a>
