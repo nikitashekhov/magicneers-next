@@ -30,7 +30,7 @@ export default async function Home() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {certificates.map((certificate) => (
+            {certificates.map((certificate: any) => (
               <CertificateCardPublic key={certificate.id} certificate={certificate as unknown as Certificate} />
             ))}
           </div>

@@ -1,7 +1,6 @@
 'use client';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Button } from "./ui/button";
 import { ArrowRight, House } from "lucide-react";
 
 export default function UserAvatar() {

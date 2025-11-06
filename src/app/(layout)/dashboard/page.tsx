@@ -2,8 +2,6 @@ import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 import CertificateCard from '@/components/certificate-card';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 
 export default async function Dashboard() {
   const session = await auth();

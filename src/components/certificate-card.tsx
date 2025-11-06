@@ -17,14 +17,6 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('ru-RU', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
   const formatInstallationDate = (date: Date) => {
     return date.toLocaleDateString('ru-RU', {
       year: 'numeric',

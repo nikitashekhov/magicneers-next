@@ -1,6 +1,6 @@
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
-import { forbidden, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import CertificatesAdminList from '@/components/admin-certificates-list';
 
 
