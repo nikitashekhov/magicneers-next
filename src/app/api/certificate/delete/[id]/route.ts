@@ -69,10 +69,10 @@ export async function DELETE(
 
     // Теперь можно удалить записи файлов из БД
     await Promise.all([
-      prisma.file.delete({ where: { id: smilePhotoId } }).catch((error) => {
+      prisma.file.delete({ where: { id: smilePhotoId } }).catch((error: any) => {
         console.error('Error deleting smile photo from DB:', error);
       }),
-      prisma.file.delete({ where: { id: digitalCopyId } }).catch((error) => {
+      prisma.file.delete({ where: { id: digitalCopyId } }).catch((error: any) => {
         console.error('Error deleting digital copy from DB:', error);
       })
     ]);
